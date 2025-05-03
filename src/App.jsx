@@ -1,6 +1,32 @@
 import './App.css'
+import responseMovies from "./mocks/with-response.json"
 
 function App() {
+
+  const movies = responseMovies.Search
+  const hasMovies = movies?.length > 0
+
+  const renderMovies = () => {
+    return (
+      <ul>
+        {
+          movies.map(movie => (
+            <li key={movie.imdbID}>
+              <h3>{movie.Title}</h3>
+              <h3>{movie.Year}</h3>
+              <img src={movie.Poster} alt={movie.Title} />
+            </li>
+          ))
+        }
+      </ul>
+    )
+  }
+
+  const renderNoResult = () => {
+    return (
+      <p>No se encontraron resultados</p>
+    )
+  }
 
   return (
     <div className='page'>
@@ -14,6 +40,11 @@ function App() {
 
       <main>
         {/* TODO: Aqui iran los reultados de la API */}
+        {
+          hasMovies
+            ? renderMovies
+            : renderNoResult
+        }
       </main>
     </div>
   )
