@@ -1,50 +1,43 @@
+import { useEffect } from 'react'
 import './App.css'
-import responseMovies from "./mocks/with-response.json"
+import { Movies } from './components/Movies'
+import { useMovies } from './hooks/useMovies'
+import { useState } from 'react'
 
 function App() {
 
-  const movies = responseMovies.Search
-  const hasMovies = movies?.length > 0
+  const { movies : mappedMovies } = useMovies()
 
-  const renderMovies = () => {
-    return (
-      <ul>
-        {
-          movies.map(movie => (
-            <li key={movie.imdbID}>
-              <h3>{movie.Title}</h3>
-              <h3>{movie.Year}</h3>
-              <img src={movie.Poster} alt={movie.Title} />
-            </li>
-          ))
-        }
-      </ul>
-    )
+  const { query, setQuery } = useState('')
+
+  // const inputRef = useRef()
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    console.log({ query });
   }
 
-  const renderNoResult = () => {
-    return (
-      <p>No se encontraron resultados</p>
-    )
+  const handleChange = (event) => {
+    setQuery(event.target.value)
   }
+
+  useEffect(() => {
+
+  }, [query])
 
   return (
     <div className='page'>
       <header>
         <h1>Buscador de peliculas</h1>
-        <form className='form' action="">
-          <input type="text" placeholder='Avengers, Star Wars, The Matrix ...' />
+        <form className='form' onSubmit={handleSubmit}>
+          <input onChange={handleChange} name='query' value={query} type="text" placeholder='Avengers, Star Wars, The Matrix ...' />
           <button type='submit'>Buscar película</button>
         </form>
       </header>
 
       <main>
         {/* TODO: Aqui iran los reultados de la API */}
-        {
-          hasMovies
-            ? renderMovies
-            : renderNoResult
-        }
+        <Movies movies={mappedMovies}/>
       </main>
     </div>
   )
