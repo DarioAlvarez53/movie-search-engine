@@ -1,43 +1,46 @@
-import { useEffect } from 'react'
 import './App.css'
-import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
-import { useState } from 'react'
+import { Movies } from './components/Movies'
+import { useRef } from 'react'
+import { useSearch } from './hooks/useSearch'
+
+
 
 function App() {
 
-  const { movies : mappedMovies } = useMovies()
+  const { movies } = useMovies()
+  const { search, setSearch, error } = useSearch()
 
-  const { query, setQuery } = useState('')
-
-  // const inputRef = useRef()
+  const counter = useRef(0) // valor que persiste entre renders
+  counter.current++
+  console.log(counter.current);
+  
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log({ query });
+    console.log({ search });
   }
 
   const handleChange = (event) => {
-    setQuery(event.target.value)
+    setSearch(event.target.value)
   }
 
-  useEffect(() => {
-
-  }, [query])
+  
 
   return (
     <div className='page'>
       <header>
         <h1>Buscador de peliculas</h1>
         <form className='form' onSubmit={handleSubmit}>
-          <input onChange={handleChange} name='query' value={query} type="text" placeholder='Avengers, Star Wars, The Matrix ...' />
+          <input onChange={handleChange} name='query' value={search} type="text" placeholder='Avengers, Star Wars, The Matrix ...' />
           <button type='submit'>Buscar película</button>
         </form>
+        {error && <p style={{color: 'red'}}>{error}</p>}
       </header>
 
       <main>
         {/* TODO: Aqui iran los reultados de la API */}
-        <Movies movies={mappedMovies}/>
+        <Movies movies={movies}/>
       </main>
     </div>
   )
